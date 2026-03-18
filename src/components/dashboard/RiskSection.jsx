@@ -6,7 +6,7 @@ const RiskSection = ({ showInsights, comments }) => {
   return (
     <section id="section-risks" className="pb-12">
       <div className="flex items-center gap-2 mb-4">
-        <h3 className="text-lg font-bold text-slate-700 uppercase tracking-wide">4. Risk Management (리스크 식별)</h3>
+        <h3 className="text-lg font-bold text-slate-700 uppercase tracking-wide">5. RISK MANAGEMENT</h3>
         <div className="h-px flex-1 bg-slate-200"></div>
       </div>
 

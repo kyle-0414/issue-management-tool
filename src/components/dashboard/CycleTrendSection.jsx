@@ -6,7 +6,7 @@ const CycleTrendSection = ({ showInsights, comments }) => {
   return (
     <section id="section-cycle" className="mb-10">
       <div className="flex items-center gap-2 mb-4">
-        <h3 className="text-lg font-bold text-slate-700 uppercase tracking-wide">3. Cycle Trend Analysis (차수별 품질 변화)</h3>
+        <h3 className="text-lg font-bold text-slate-700 uppercase tracking-wide">4. CYCLE TREND ANALYSIS</h3>
         <div className="h-px flex-1 bg-slate-200"></div>
       </div>
 

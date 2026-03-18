@@ -2,6 +2,8 @@ import React from 'react';
 import PulseSection from './PulseSection';
 import TrendStatusSection from './TrendStatusSection';
 import QualityInsightsSection from './QualityInsightsSection';
+import CycleTrendSection from './CycleTrendSection';
+import RiskSection from './RiskSection';
 
 const Dashboard = ({ showInsights, comments }) => {
   return (
@@ -16,6 +18,8 @@ const Dashboard = ({ showInsights, comments }) => {
       <PulseSection showInsights={showInsights} comments={comments} />
       <TrendStatusSection showInsights={showInsights} comments={comments} />
       <QualityInsightsSection showInsights={showInsights} comments={comments} />
+      <CycleTrendSection showInsights={showInsights} comments={comments} />
+      <RiskSection showInsights={showInsights} comments={comments} />
     </div>
   );
 };
