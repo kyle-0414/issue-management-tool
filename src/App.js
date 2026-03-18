@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import Dashboard from './components/dashboard/Dashboard';
+import IssueListPage from './pages/IssueList/IssueListPage';
 import AdminLayout from './pages/Admin/AdminLayout';
 
 // 초기 기본값 설정 (LocalStorage에 데이터가 없을 경우 사용)
@@ -29,7 +30,7 @@ const INITIAL_NOTIFICATIONS = [
 
 function App() {
   // --- 상태 관리 (States) ---
-  const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard', 'admin-project', 'admin-comments', 'admin-notifications'
+  const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard', 'issue-list', 'admin-project', ...
   const [showInsights, setShowInsights] = useState(false);
 
   // 데이터 상태 (LocalStorage 로드 포함)
@@ -79,6 +80,29 @@ function App() {
     setComments({ ...comments, [key]: value }); // 특정 키값만 업데이트
   };
 
+  // 뷰 렌더링 헬퍼
+  const renderContent = () => {
+    switch (currentView) {
+      case 'dashboard':
+        return <Dashboard showInsights={showInsights} comments={comments} />;
+      case 'issue-list':
+        return <IssueListPage showInsights={showInsights} comments={comments} />;
+      default:
+        return (
+          <AdminLayout
+            currentView={currentView}
+            projectInfo={projectInfo}
+            setProjectInfo={setProjectInfo}
+            comments={comments}
+            updateComment={updateComment}
+            notifications={notifications}
+            addNotification={addNotification}
+            removeNotification={removeNotification}
+          />
+        );
+    }
+  };
+
   return (
     <div className={`flex h-screen overflow-hidden ${showInsights ? 'insight-active' : ''}`}>
       {/* 1. 사이드바 (내비게이션 기능 추가) */}
@@ -95,21 +119,8 @@ function App() {
         />
 
         {/* 3. 메인 콘텐츠 (뷰에 따라 전환) */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
-          {currentView === 'dashboard' ? (
-            <Dashboard showInsights={showInsights} comments={comments} />
-          ) : (
-            <AdminLayout
-              currentView={currentView}
-              projectInfo={projectInfo}
-              setProjectInfo={setProjectInfo}
-              comments={comments}
-              updateComment={updateComment}
-              notifications={notifications}
-              addNotification={addNotification}
-              removeNotification={removeNotification}
-            />
-          )}
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth bg-slate-50/50">
+          {renderContent()}
         </main>
       </div>
     </div>

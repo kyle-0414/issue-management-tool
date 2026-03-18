@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { Activity, LineChart, LayoutGrid, AlertTriangle, Settings, MessageSquare, Bell, Shield, ChevronDown } from 'lucide-react';
 
 const Sidebar = ({ onNavigate, currentView }) => {
-  const [isAdminOpen, setIsAdminOpen] = useState(true); // 기본적으로 열려있음
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
 
   const menuItems = [
     { id: 'dashboard', label: '대시보드 홈', icon: Activity },
-    { id: 'charts', label: '트렌드 분석', icon: LineChart },
-    { id: 'cycle', label: '차수별 품질 비교', icon: LayoutGrid },
-    { id: 'risks', label: '리스크 관리', icon: AlertTriangle },
+    { id: 'issue-list', label: '이슈 리스트 현황', icon: LayoutGrid },
   ];
 
   const adminItems = [
@@ -25,21 +23,18 @@ const Sidebar = ({ onNavigate, currentView }) => {
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4">
-        <div className="px-6 mb-2">
-          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Main Menu</p>
-        </div>
-        <ul className="space-y-1 px-3 mb-8">
+        <ul className="space-y-1 px-3 mb-4">
           {menuItems.map((item) => (
             <li key={item.id}>
               <button
-                onClick={() => onNavigate('dashboard')}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors ${currentView === 'dashboard' && item.id === 'dashboard'
-                  ? 'bg-indigo-600 text-white'
+                onClick={() => onNavigate(item.id)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors ${currentView === item.id
+                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/20'
                   : 'text-slate-300 hover:bg-slate-800 hover:text-white'
                   }`}
               >
                 <item.icon size={20} />
-                <span>{item.label}</span>
+                <span className="font-medium">{item.label}</span>
               </button>
             </li>
           ))}
@@ -49,29 +44,31 @@ const Sidebar = ({ onNavigate, currentView }) => {
         <div className="px-3">
           <button
             onClick={() => setIsAdminOpen(!isAdminOpen)}
-            className="w-full flex items-center justify-between px-3 py-2 text-slate-500 hover:text-slate-300 transition-colors group"
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-md transition-all group ${adminItems.some(item => currentView === item.id)
+                ? 'bg-slate-800/50 text-indigo-400'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
+              }`}
           >
-            <p className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
-              <Shield size={12} /> Admin
-            </p>
-            <ChevronDown
-              size={14}
-              className={`transition-transform duration-300 ${isAdminOpen ? 'rotate-180' : ''}`}
-            />
+            <div className="flex items-center gap-3">
+              <Shield size={20} className={adminItems.some(item => currentView === item.id) ? 'text-indigo-400' : 'text-slate-400'} />
+              <span className="text-sm font-bold uppercase tracking-widest">Admin</span>
+            </div>
+            <div className={`transition-transform duration-300 ${isAdminOpen ? 'rotate-180' : ''}`}>
+              <ChevronDown size={14} />
+            </div>
           </button>
 
-          <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isAdminOpen ? 'max-h-40 opacity-100 mt-1' : 'max-h-0 opacity-0'}`}>
+          <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isAdminOpen ? 'max-h-48 opacity-100 mt-1' : 'max-h-0 opacity-0'}`}>
             <ul className="space-y-1">
               {adminItems.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => onNavigate(item.id)}
-                    className={`w-full flex items-center gap-3 pl-8 pr-3 py-2 rounded-md transition-colors text-sm ${currentView === item.id
-                      ? 'bg-slate-800 text-indigo-400 font-bold border-l-2 border-indigo-500 rounded-l-none'
+                    className={`w-full flex items-center gap-3 pl-11 pr-3 py-2 rounded-md transition-colors text-sm ${currentView === item.id
+                      ? 'bg-indigo-600/10 text-indigo-400 font-bold'
                       : 'text-slate-400 hover:bg-slate-800 hover:text-white'
                       }`}
                   >
-                    <item.icon size={16} />
                     <span>{item.label}</span>
                   </button>
                 </li>
