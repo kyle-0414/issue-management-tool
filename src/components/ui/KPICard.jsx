@@ -14,19 +14,27 @@ const KPICard = ({ title, value, subValue, subText, icon: Icon, colorClass, high
       <div className="flex justify-between items-start mb-4">
         <div>
           <p className="text-sm font-medium text-slate-500">{title}</p>
-          <h4 className={`text-3xl font-bold mt-1 ${highlight ? 'text-red-600' : 'text-slate-800'}`}>{value}</h4>
+          {typeof value === 'string' || typeof value === 'number' ? (
+            <h4 className={`text-3xl font-bold mt-1 ${highlight ? 'text-red-600' : 'text-slate-800'}`}>{value}</h4>
+          ) : (
+            <div className="mt-2">{value}</div>
+          )}
         </div>
         <div className={`p-3 rounded-lg ${colorClass}`}>
           <Icon size={24} />
         </div>
       </div>
 
-      <div className="flex items-center text-sm">
-        <span className={`${subValue.includes('-') || subValue.includes('Required') ? 'text-red-600' : 'text-emerald-600'} font-bold flex items-center gap-1`}>
-          {subValue}
-        </span>
-        <span className="text-slate-400 ml-2">{subText}</span>
-      </div>
+      {(subValue || subText) && (
+        <div className="flex items-center text-sm">
+          {subValue && (
+            <span className={`${(subValue.toString().includes('-') || subValue.toString().includes('Required')) ? 'text-red-600' : 'text-emerald-600'} font-bold flex items-center gap-1`}>
+              {subValue}
+            </span>
+          )}
+          {subText && <span className="text-slate-400 ml-2">{subText}</span>}
+        </div>
+      )}
 
       {/* Kyle의 코멘트 툴팁 (showInsights가 true일 때만 보임) */}
       {showInsights && insight && (

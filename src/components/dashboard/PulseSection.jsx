@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Bug, Timer, ShieldHalf } from 'lucide-react';
+import { CheckCircle, Bug, ShieldHalf, AlertCircle } from 'lucide-react';
 import KPICard from '../ui/KPICard';
 
 const PulseSection = ({ showInsights, comments }) => {
@@ -33,16 +33,6 @@ const PulseSection = ({ showInsights, comments }) => {
           showInsights={showInsights}
         />
         <KPICard
-          title="Avg. Fix Time"
-          value="4.2h"
-          subValue="Good"
-          subText="Velocity Status"
-          icon={Timer}
-          colorClass="bg-blue-50 text-blue-600"
-          insight={comments?.fixTime}
-          showInsights={showInsights}
-        />
-        <KPICard
           title="Test Coverage"
           value="92%"
           subValue="Stable"
@@ -50,6 +40,28 @@ const PulseSection = ({ showInsights, comments }) => {
           icon={ShieldHalf}
           colorClass="bg-purple-50 text-purple-600"
           insight={comments?.coverage}
+          showInsights={showInsights}
+        />
+        <KPICard
+          title="Reopen / Side-effect"
+          value={
+            <div className="flex items-end gap-6 h-9">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Reopen</span>
+                <span className="text-2xl font-bold text-slate-800 leading-none">3</span>
+              </div>
+              <div className="w-[1px] h-6 bg-slate-200 mb-0.5"></div>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Side-effect</span>
+                <span className="text-2xl font-bold text-slate-800 leading-none">1</span>
+              </div>
+            </div>
+          }
+          subValue="Action Needed"
+          subText="Quality Stability"
+          icon={AlertCircle}
+          colorClass="bg-amber-50 text-amber-600"
+          insight={comments?.fixTime} // Reusing the fixTime space for now
           showInsights={showInsights}
         />
       </div>
