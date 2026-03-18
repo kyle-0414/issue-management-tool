@@ -6,12 +6,13 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const StatusChart = () => {
   const data = {
-    labels: ['Passed', 'Failed', 'Blocked', 'Not Run'],
+    labels: ['Passed', 'Failed', 'Blocked', 'Not Run', 'NA'],
     datasets: [
       {
-        data: [850, 45, 25, 80],
-        backgroundColor: ['#10b981', '#ef4444', '#f59e0b', '#94a3b8'],
+        data: [850, 125, 25, 0, 20],
+        backgroundColor: ['#10b981', '#ef4444', '#f59e0b', '#94a3b8', '#cbd5e1'],
         borderWidth: 0,
+        hoverOffset: 4
       },
     ],
   };
@@ -19,18 +20,23 @@ const StatusChart = () => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    cutout: '70%',
+    cutout: '75%',
     plugins: {
-      legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } },
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (context) => `${context.label}: ${context.raw} cases`
+        }
+      }
     },
   };
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full flex items-center justify-center">
       <Doughnut data={data} options={options} />
-      {/* 차트 중앙에 85% 텍스트 표시 */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <span className="text-2xl font-bold text-slate-700">85%</span>
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none translate-y-1">
+        <span className="text-3xl font-black text-slate-800">85%</span>
+        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Passed</span>
       </div>
     </div>
   );

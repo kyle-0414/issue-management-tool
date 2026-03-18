@@ -65,6 +65,16 @@ const IssueListPage = ({ comments, showInsights }) => {
                             <option>Resolved</option>
                             <option>Closed</option>
                         </select>
+                        <select className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                            <option>Reopen: All</option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                        <select className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                            <option>Side-effect: All</option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
                         <button className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors text-sm font-medium">
                             <Filter size={16} /> Filter
                         </button>
@@ -94,20 +104,20 @@ const IssueListPage = ({ comments, showInsights }) => {
                                     <td className="px-6 py-4 font-medium truncate max-w-xs">{issue.summary}</td>
                                     <td className="px-6 py-4">
                                         <span className={`px-2 py-1 rounded text-[10px] font-bold ${issue.severity === 'Critical' ? 'bg-red-100 text-red-700' :
-                                                issue.severity === 'Major' ? 'bg-orange-100 text-orange-700' :
-                                                    'bg-slate-100 text-slate-700'
+                                            issue.severity === 'Major' ? 'bg-orange-100 text-orange-700' :
+                                                'bg-slate-100 text-slate-700'
                                             }`}>
                                             {issue.severity}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`flex items-center gap-1.5 font-medium ${issue.status === 'Open' ? 'text-red-600' :
-                                                issue.status === 'In Progress' ? 'text-blue-600' :
-                                                    'text-emerald-600'
+                                            issue.status === 'In Progress' ? 'text-blue-600' :
+                                                'text-emerald-600'
                                             }`}>
                                             <span className={`w-1.5 h-1.5 rounded-full ${issue.status === 'Open' ? 'bg-red-500' :
-                                                    issue.status === 'In Progress' ? 'bg-blue-500' :
-                                                        'bg-emerald-500'
+                                                issue.status === 'In Progress' ? 'bg-blue-500' :
+                                                    'bg-emerald-500'
                                                 }`}></span>
                                             {issue.status}
                                         </span>
