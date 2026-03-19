@@ -20,28 +20,28 @@ const TrendStatusSection = ({ showInsights, comments }) => {
             <p className="text-sm text-slate-500">최근 10일간의 이슈 해결 흐름 (Gap 관찰)</p>
           </div>
 
-          <div className="flex items-center gap-6">
-            {/* 보기 방식 전환용 segmented control */}
-            <div className="flex p-1 bg-slate-100 rounded-lg">
+          <div className="flex items-center gap-8">
+            {/* 시안 기반 다크 테마 토글 */}
+            <div className="flex p-1 bg-slate-100/80 rounded-lg border border-slate-200/50">
               <button
                 onClick={() => setViewMode('cumulative')}
-                className={`px-4 py-1.5 text-xs font-black rounded-md transition-all ${viewMode === 'cumulative' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                className={`px-3 py-1 text-[10px] font-black rounded-md transition-all ${viewMode === 'cumulative' ? 'bg-[#0f172a] text-white shadow-lg shadow-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
               >
-                누적
+                Cumulative
               </button>
               <button
                 onClick={() => setViewMode('daily')}
-                className={`px-4 py-1.5 text-xs font-black rounded-md transition-all ${viewMode === 'daily' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                className={`px-3 py-1 text-[10px] font-black rounded-md transition-all ${viewMode === 'daily' ? 'bg-[#0f172a] text-white shadow-lg shadow-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
               >
-                일별
+                Daily
               </button>
             </div>
 
-            <div className="flex flex-col items-end min-w-[70px]">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">
-                {viewMode === 'cumulative' ? '누적 Gap' : '당일 Gap'}
+            <div className="flex flex-col items-end min-w-[90px]">
+              <span className="text-[10px] font-bold text-slate-400 leading-none mb-1">
+                {viewMode === 'cumulative' ? 'Cumulative Gap' : 'Daily Gap'}
               </span>
-              <span className="text-2xl font-black text-rose-600 leading-none">
+              <span className="text-3xl font-black text-rose-600 leading-none tracking-tighter">
                 {viewMode === 'cumulative' ? '24' : '5'}
               </span>
             </div>
@@ -50,6 +50,22 @@ const TrendStatusSection = ({ showInsights, comments }) => {
 
         <div className="h-[350px]">
           <TrendChart viewMode={viewMode} />
+        </div>
+
+        {/* 시안 기반 커스텀 범례 (모서리 곡률 적용) */}
+        <div className="mt-4 flex justify-center gap-8 border-t border-slate-50 pt-4">
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded-[4px] bg-rose-500 shadow-sm shadow-rose-100"></span>
+            <span className="text-[13px] font-bold text-slate-600">Created {viewMode === 'cumulative' ? '(125)' : '(12)'}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded-[4px] bg-blue-500 shadow-sm shadow-blue-100"></span>
+            <span className="text-[13px] font-bold text-slate-600">Resolved {viewMode === 'cumulative' ? '(108)' : '(10)'}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded-[4px] bg-emerald-500 shadow-sm shadow-emerald-100"></span>
+            <span className="text-[13px] font-bold text-slate-600">Closed {viewMode === 'cumulative' ? '(101)' : '(8)'}</span>
+          </div>
         </div>
 
         {showInsights && (

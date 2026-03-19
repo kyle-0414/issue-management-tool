@@ -28,14 +28,7 @@ const TrendChart = ({ viewMode = 'cumulative' }) => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom',
-        labels: {
-          usePointStyle: false,
-          boxWidth: 12,
-          boxHeight: 12,
-          padding: 16,
-          font: { size: 12, weight: 'bold' },
-        },
+        display: false,
       },
       tooltip: {
         mode: 'index',
