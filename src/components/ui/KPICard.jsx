@@ -1,21 +1,16 @@
 import React from 'react';
 import { Quote } from 'lucide-react';
 
-const KPICard = ({ title, value, subValue, subText, icon: Icon, colorClass, highlight, insight, showInsights }) => {
+const KPICard = ({ title, value, subValue, subText, icon: Icon, colorClass, highlight, insight, showInsights, valueColor }) => {
   return (
     <div className={`bg-white p-6 rounded-xl border shadow-sm relative group transition-all duration-300 card-hover ${highlight ? 'border-2 border-red-500' : 'border-slate-200'}`}>
-      {/* 하이라이트 배지 (예: RELEASE BLOCKER) */}
-      {highlight && (
-        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-3 py-0.5 rounded-full text-xs font-bold shadow-sm">
-          RELEASE BLOCKER
-        </div>
-      )}
+      {/* 하이라이트 배지 제거됨 */}
 
       <div className="flex justify-between items-start mb-4">
         <div>
           <p className="text-sm font-medium text-slate-500">{title}</p>
           {typeof value === 'string' || typeof value === 'number' ? (
-            <h4 className={`text-3xl font-bold mt-1 ${highlight ? 'text-red-600' : 'text-slate-800'}`}>{value}</h4>
+            <h4 className={`text-3xl font-bold mt-1 ${valueColor ? valueColor : (highlight ? 'text-red-600' : 'text-slate-800')}`}>{value}</h4>
           ) : (
             <div className="mt-2">{value}</div>
           )}

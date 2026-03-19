@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import TrendChart from '../charts/TrendChart';
 import StatusChart from '../charts/StatusChart';
 
 const TrendStatusSection = ({ showInsights, comments }) => {
+  const [viewMode, setViewMode] = useState('cumulative');
+
   return (
     <section id="section-charts" className="mb-10">
       <div className="flex items-center gap-2 mb-4">
@@ -18,32 +20,36 @@ const TrendStatusSection = ({ showInsights, comments }) => {
             <p className="text-sm text-slate-500">최근 10일간의 이슈 해결 흐름 (Gap 관찰)</p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-6 bg-slate-50 p-3 rounded-lg border border-slate-100">
-            <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Created</span>
-              <span className="text-lg font-black text-rose-500">125</span>
+          <div className="flex items-center gap-6">
+            {/* 보기 방식 전환용 segmented control */}
+            <div className="flex p-1 bg-slate-100 rounded-lg">
+              <button
+                onClick={() => setViewMode('cumulative')}
+                className={`px-4 py-1.5 text-xs font-black rounded-md transition-all ${viewMode === 'cumulative' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+              >
+                누적
+              </button>
+              <button
+                onClick={() => setViewMode('daily')}
+                className={`px-4 py-1.5 text-xs font-black rounded-md transition-all ${viewMode === 'daily' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+              >
+                일별
+              </button>
             </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Resolved</span>
-              <span className="text-lg font-black text-blue-500">108</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Closed</span>
-              <span className="text-lg font-black text-emerald-500">101</span>
-            </div>
-            <div className="h-8 w-px bg-slate-200 mx-1"></div>
-            <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Gap</span>
-              <div className="flex items-center gap-1.5">
-                <span className="text-lg font-black text-rose-600">24</span>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 bg-rose-100 text-rose-700 rounded uppercase">Critical</span>
-              </div>
+
+            <div className="flex flex-col items-end min-w-[70px]">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">
+                {viewMode === 'cumulative' ? '누적 Gap' : '당일 Gap'}
+              </span>
+              <span className="text-2xl font-black text-rose-600 leading-none">
+                {viewMode === 'cumulative' ? '24' : '5'}
+              </span>
             </div>
           </div>
         </div>
 
         <div className="h-[350px]">
-          <TrendChart />
+          <TrendChart viewMode={viewMode} />
         </div>
 
         {showInsights && (
