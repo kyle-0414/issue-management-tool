@@ -22,7 +22,35 @@ ChartJS.register(
   Legend
 );
 
-const TrendChart = ({ viewMode = 'cumulative' }) => {
+const TrendChart = ({ viewMode = 'cumulative', issues = [] }) => {
+  const totalCreated = issues.length;
+  const totalResolved = issues.filter(i => i.status === 'Resolved' || i.status === 'Closed').length;
+  const totalClosed = issues.filter(i => i.status === 'Closed').length;
+
+  const labels = ['D-7', 'D-6', 'D-5', 'D-4', 'D-3', 'D-2', 'D-1', 'Today'];
+
+  const getCumulativeData = (total) => {
+    // 트렌드를 시뮬레이션하기 위해 역순으로 차감 (데이터가 D-7까지 꽉 차 보이도록 완만한 차감)
+    const data = [total];
+    for (let i = 0; i < 7; i++) {
+        // 하루 평균 2~4건씩 증가하는 느낌으로 시뮬레이션
+        const decrement = Math.floor(Math.random() * 3 + 2); 
+        data.unshift(Math.max(0, data[0] - decrement));
+    }
+    return data;
+  };
+
+  const getDailyData = (total) => {
+    // 일일 발생량 시뮬레이션
+    const data = [];
+    for (let i = 0; i < 8; i++) {
+        data.push(Math.floor(Math.random() * 15 + 5));
+    }
+    // 마지막 값(Today)은 임의로 조정
+    data[7] = Math.floor(total / 10) + 2; 
+    return data;
+  };
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -46,14 +74,13 @@ const TrendChart = ({ viewMode = 'cumulative' }) => {
     },
   };
 
-  // 보기 방식에 따른 데이터셋 구성
   const chartData = {
     cumulative: {
-      labels: ['D-7', 'D-6', 'D-5', 'D-4', 'D-3', 'D-2', 'D-1', 'Today'],
+      labels,
       datasets: [
         {
-          label: 'Created (125)',
-          data: [40, 52, 65, 80, 95, 105, 115, 125],
+          label: `Created (${totalCreated})`,
+          data: getCumulativeData(totalCreated),
           borderColor: '#ef4444',
           backgroundColor: '#ef4444',
           tension: 0.3,
@@ -61,8 +88,8 @@ const TrendChart = ({ viewMode = 'cumulative' }) => {
           pointHoverRadius: 6,
         },
         {
-          label: 'Resolved (108)',
-          data: [30, 42, 55, 68, 80, 90, 100, 108],
+          label: `Resolved (${totalResolved})`,
+          data: getCumulativeData(totalResolved),
           borderColor: '#3b82f6',
           backgroundColor: '#3b82f6',
           tension: 0.3,
@@ -70,8 +97,8 @@ const TrendChart = ({ viewMode = 'cumulative' }) => {
           pointHoverRadius: 6,
         },
         {
-          label: 'Closed (101)',
-          data: [25, 35, 48, 62, 75, 85, 95, 101],
+          label: `Closed (${totalClosed})`,
+          data: getCumulativeData(totalClosed),
           borderColor: '#10b981',
           backgroundColor: '#10b981',
           tension: 0.3,
@@ -81,34 +108,28 @@ const TrendChart = ({ viewMode = 'cumulative' }) => {
       ],
     },
     daily: {
-      labels: ['D-7', 'D-6', 'D-5', 'D-4', 'D-3', 'D-2', 'D-1', 'Today'],
+      labels,
       datasets: [
         {
-          label: 'Created (12)',
-          data: [15, 18, 25, 20, 10, 8, 15, 12],
+          label: 'Created',
+          data: getDailyData(totalCreated),
           borderColor: '#ef4444',
           backgroundColor: '#ef4444',
-          tension: 0.3,
-          pointRadius: 4,
-          pointHoverRadius: 6,
+          tension: 0.3, pointRadius: 4, pointHoverRadius: 6,
         },
         {
-          label: 'Resolved (10)',
-          data: [10, 13, 18, 16, 13, 10, 12, 10],
+          label: 'Resolved',
+          data: getDailyData(totalResolved),
           borderColor: '#3b82f6',
           backgroundColor: '#3b82f6',
-          tension: 0.3,
-          pointRadius: 4,
-          pointHoverRadius: 6,
+          tension: 0.3, pointRadius: 4, pointHoverRadius: 6,
         },
         {
-          label: 'Closed (8)',
-          data: [8, 12, 22, 18, 15, 8, 10, 8],
+          label: 'Closed',
+          data: getDailyData(totalClosed),
           borderColor: '#10b981',
           backgroundColor: '#10b981',
-          tension: 0.3,
-          pointRadius: 4,
-          pointHoverRadius: 6,
+          tension: 0.3, pointRadius: 4, pointHoverRadius: 6,
         },
       ],
     },

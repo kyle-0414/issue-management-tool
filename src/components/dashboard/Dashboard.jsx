@@ -5,13 +5,28 @@ import TrendStatusSection from './TrendStatusSection';
 import QualityInsightsSection from './QualityInsightsSection';
 import CycleTrendSection from './CycleTrendSection';
 
-const Dashboard = ({ showInsights, comments }) => {
-  // 1. 핵심 지표 데이터 정의 (근거 데이터)
+const Dashboard = ({ showInsights, comments, issues }) => {
+  // 1. 핵심 지표 데이터 계산 (issues 기반)
+  const criticalBugs = issues.filter(i => i.severity === 'Critical' && i.status !== 'Closed').length;
+  const unresolved = issues.filter(i => i.status !== 'Closed').length;
+  const reopens = issues.filter(i => i.reopen === 'Yes').length;
+  const reopenRate = issues.length > 0 ? Math.round((reopens / issues.length) * 100) : 0;
+  
+  // Dummy coverage calculation for now (or could be part of CSV)
+  const coverage = 92;
+
+  const openCount = issues.filter(i => i.status === 'Open' || i.status === 'Reopened').length;
+  const inProgressCount = issues.filter(i => i.status === 'In Progress').length;
+  const devDoneCount = issues.filter(i => i.status === 'Resolved').length;
+
   const metrics = {
-    criticalBugs: 2,
-    unresolved: 24,
-    reopenRate: 12, // % 단위
-    coverage: 92     // % 단위
+    criticalBugs,
+    unresolved,
+    reopenRate,
+    coverage,
+    openCount,
+    inProgressCount,
+    devDoneCount
   };
 
   // 2. Release Status 자동 판단 로직
@@ -47,8 +62,8 @@ const Dashboard = ({ showInsights, comments }) => {
       <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-100 pb-8">
         <div>
           <h2 className="text-2xl font-bold text-slate-800 mb-2 uppercase tracking-tight tracking-wider">프로젝트 품질 현황 개요</h2>
-          <p className="text-slate-600 font-medium max-w-2xl">
-            현재 릴리즈 D-3 시점입니다. 본 대시보드는 1차 전수 검증부터 4차 Ad-hoc까지의 품질 흐름을 추적합니다.
+          <p className="text-slate-600 font-medium max-w-4xl">
+            현재 릴리즈 D-3 시점입니다. 본 대시보드는 QA 1차 테스트 (핵심기능 확인)부터 4차 탐색적 테스팅 (Exploratory Testing)까지의 품질 흐름을 추적합니다.
           </p>
         </div>
 
@@ -67,9 +82,9 @@ const Dashboard = ({ showInsights, comments }) => {
       </div>
 
       <PulseSection showInsights={showInsights} comments={comments} metrics={metrics} />
-      <TrendStatusSection showInsights={showInsights} comments={comments} />
-      <QualityInsightsSection showInsights={showInsights} comments={comments} />
-      <CycleTrendSection showInsights={showInsights} comments={comments} />
+      <TrendStatusSection showInsights={showInsights} comments={comments} issues={issues} />
+      <QualityInsightsSection showInsights={showInsights} comments={comments} issues={issues} />
+      <CycleTrendSection showInsights={showInsights} comments={comments} issues={issues} />
     </div>
   );
 };

@@ -47,7 +47,7 @@ const CycleChart = () => {
   };
 
   const data = {
-    labels: ['1차 (전수)', '2차 (변경점)', '3차 (회귀)', '4차 (Ad-hoc)'],
+    labels: ['QA 1차 테스트 (핵심기능 확인)', '2차 (변경점)', '3차 (회귀)', '4차 탐색적 테스팅 (Exploratory Testing)'],
     datasets: [
       {
         type: 'line',

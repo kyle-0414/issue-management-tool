@@ -1,16 +1,55 @@
 import React, { useState } from 'react';
 import { Search, Filter, Upload, Clock, AlertTriangle, FileText, Download } from 'lucide-react';
 
-const IssueListPage = ({ comments, showInsights }) => {
+const IssueListPage = ({ comments, showInsights, issues, onUpload }) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [filters, setFilters] = useState({
+        project: 'All',
+        severity: 'All',
+        status: 'All',
+        reopen: 'All'
+    });
 
-    // 더미 데이터
-    const issues = [
-        { id: 'QA-101', summary: 'Payment gateway timeout on production', severity: 'Critical', status: 'Open', project: 'FinTech App', reopen: 'Yes' },
-        { id: 'QA-102', summary: 'Incorrect font size in login page', severity: 'Minor', status: 'In Progress', project: 'FinTech App', reopen: 'No' },
-        { id: 'QA-103', summary: 'Missing translation for KR locale', severity: 'Major', status: 'Resolved', project: 'FinTech App', reopen: 'No' },
-        { id: 'QA-104', summary: 'App crashes when switching tabs rapidly', severity: 'Critical', status: 'Reopened', project: 'FinTech App', reopen: 'Yes' },
-    ];
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const csvText = event.target.result;
+            onUpload(csvText);
+        };
+        reader.readAsText(file);
+    };
+
+    const handleFilterChange = (key, value) => {
+        setFilters(prev => ({ ...prev, [key]: value }));
+    };
+
+    const resetFilters = () => {
+        setFilters({
+            project: 'All',
+            severity: 'All',
+            status: 'All',
+            reopen: 'All'
+        });
+        setSearchTerm('');
+    };
+
+    // 필터링된 이슈들
+    const filteredIssues = issues.filter(issue => {
+        const matchesSearch = issue.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            issue.summary.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesProject = filters.project === 'All' || issue.project === filters.project;
+        const matchesSeverity = filters.severity === 'All' || issue.severity === filters.severity;
+        const matchesStatus = filters.status === 'All' || issue.status === filters.status;
+        const matchesReopen = filters.reopen === 'All' || issue.reopen === filters.reopen;
+
+        return matchesSearch && matchesProject && matchesSeverity && matchesStatus && matchesReopen;
+    });
+
+    // 프로젝트 목록 동적 추출
+    const projects = ['All', ...new Set(issues.map(i => i.project).filter(Boolean))];
 
     return (
         <div className="max-w-7xl mx-auto space-y-8">
@@ -20,16 +59,27 @@ const IssueListPage = ({ comments, showInsights }) => {
                     <h2 className="text-2xl font-bold text-slate-800 uppercase tracking-tight">이슈 리스트 현황</h2>
                     <div className="flex items-center gap-2 mt-1 text-slate-500 text-sm">
                         <Clock size={14} />
-                        <span>최근 업데이트: 2024-03-18 17:00</span>
+                        <span>최근 업데이트: {new Date().toLocaleString()}</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors text-sm font-medium">
+                    <a 
+                        href="/issue_template.csv"
+                        download="issue_template.csv"
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors text-sm font-medium"
+                    >
                         <Download size={16} /> 템플릿 다운로드
-                    </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium shadow-lg shadow-indigo-900/20">
+                    </a>
+                    
+                    <label className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium shadow-lg shadow-indigo-900/20 cursor-pointer">
                         <Upload size={16} /> CSV 업로드
-                    </button>
+                        <input 
+                            type="file" 
+                            accept=".csv" 
+                            className="hidden" 
+                            onChange={handleFileChange} 
+                        />
+                    </label>
                 </div>
             </div>
 
@@ -47,36 +97,49 @@ const IssueListPage = ({ comments, showInsights }) => {
                         />
                     </div>
                     <div className="flex items-center gap-2">
-                        <select className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
-                            <option>Project: All</option>
-                            <option>FinTech App</option>
-                            <option>Admin Tool</option>
+                        <select 
+                            className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                            value={filters.project}
+                            onChange={(e) => handleFilterChange('project', e.target.value)}
+                        >
+                            {projects.map(p => <option key={p} value={p}>{p === 'All' ? 'Project: All' : p}</option>)}
                         </select>
-                        <select className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
-                            <option>Severity: All</option>
-                            <option>Critical</option>
-                            <option>Major</option>
-                            <option>Minor</option>
+                        <select 
+                            className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                            value={filters.severity}
+                            onChange={(e) => handleFilterChange('severity', e.target.value)}
+                        >
+                            <option value="All">Severity: All</option>
+                            <option value="Critical">Critical</option>
+                            <option value="Major">Major</option>
+                            <option value="Minor">Minor</option>
                         </select>
-                        <select className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
-                            <option>Status: All</option>
-                            <option>Open</option>
-                            <option>In Progress</option>
-                            <option>Resolved</option>
-                            <option>Closed</option>
+                        <select 
+                            className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                            value={filters.status}
+                            onChange={(e) => handleFilterChange('status', e.target.value)}
+                        >
+                            <option value="All">Status: All</option>
+                            <option value="Open">Open</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Closed">Closed</option>
+                            <option value="Reopened">Reopened</option>
                         </select>
-                        <select className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
-                            <option>Reopen: All</option>
-                            <option>Yes</option>
-                            <option>No</option>
+                        <select 
+                            className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                            value={filters.reopen}
+                            onChange={(e) => handleFilterChange('reopen', e.target.value)}
+                        >
+                            <option value="All">Reopen: All</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
                         </select>
-                        <select className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
-                            <option>Side-effect: All</option>
-                            <option>Yes</option>
-                            <option>No</option>
-                        </select>
-                        <button className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors text-sm font-medium">
-                            <Filter size={16} /> Filter
+                        <button 
+                            onClick={resetFilters}
+                            className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors text-sm font-medium"
+                        >
+                            <Filter size={16} /> Reset
                         </button>
                     </div>
                 </div>
@@ -97,7 +160,7 @@ const IssueListPage = ({ comments, showInsights }) => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 text-slate-700">
-                            {issues.map((issue) => (
+                            {filteredIssues.map((issue) => (
                                 <tr key={issue.id} className="hover:bg-slate-50/50 transition-colors cursor-pointer group">
                                     <td className="px-6 py-4 font-bold text-indigo-600">{issue.id}</td>
                                     <td className="px-6 py-4 text-xs font-medium text-slate-500 uppercase">{issue.project}</td>
@@ -150,28 +213,45 @@ const IssueListPage = ({ comments, showInsights }) => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 text-slate-700">
-                            <tr className="bg-red-50/30">
-                                <td className="px-6 py-4 font-medium flex items-center gap-2 text-red-700">
-                                    <AlertTriangle className="text-red-500" size={16} /> Payment Gateway
-                                </td>
-                                <td className="px-6 py-4">
-                                    <div className="w-full bg-slate-200 rounded-full h-1.5 w-24">
-                                        <div className="bg-red-500 h-1.5 rounded-full" style={{ width: '65%' }}></div>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4"><span className="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">Critical</span></td>
-                                <td className="px-6 py-4 text-right font-bold text-red-600">8</td>
-                            </tr>
-                            <tr>
-                                <td className="px-6 py-4 font-medium">User Auth</td>
-                                <td className="px-6 py-4">
-                                    <div className="w-full bg-slate-200 rounded-full h-1.5 w-24">
-                                        <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: '92%' }}></div>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4"><span className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs font-bold">Stable</span></td>
-                                <td className="px-6 py-4 text-right">2</td>
-                            </tr>
+                            {Object.entries(
+                                issues.reduce((acc, issue) => {
+                                    const mod = issue.module || 'Unknown';
+                                    if (!acc[mod]) acc[mod] = { name: mod, openBugs: 0, total: 0 };
+                                    if (issue.status !== 'Closed' && issue.status !== 'Resolved') acc[mod].openBugs++;
+                                    acc[mod].total++;
+                                    return acc;
+                                }, {})
+                            ).map(([modName, modData]) => {
+                                const healthScore = Math.max(0, 100 - (modData.openBugs * 15));
+                                const isCritical = modData.openBugs >= 5 || healthScore < 70;
+                                
+                                return (
+                                    <tr key={modName} className={isCritical ? "bg-red-50/30" : ""}>
+                                        <td className={`px-6 py-4 font-medium flex items-center gap-2 ${isCritical ? "text-red-700" : ""}`}>
+                                            {isCritical && <AlertTriangle className="text-red-500" size={16} />} 
+                                            {modName}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="w-full bg-slate-200 rounded-full h-1.5 w-24">
+                                                <div className={`h-1.5 rounded-full ${healthScore < 70 ? 'bg-red-500' : healthScore < 90 ? 'bg-amber-500' : 'bg-emerald-500'}`} 
+                                                     style={{ width: `${healthScore}%` }}></div>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <span className={`px-2 py-1 rounded text-xs font-bold ${
+                                                healthScore < 70 ? 'bg-red-100 text-red-700' : 
+                                                healthScore < 90 ? 'bg-amber-100 text-amber-700' : 
+                                                'bg-emerald-100 text-emerald-700'
+                                            }`}>
+                                                {healthScore < 70 ? 'Critical' : healthScore < 90 ? 'Warning' : 'Stable'}
+                                            </span>
+                                        </td>
+                                        <td className={`px-6 py-4 text-right font-bold ${modData.openBugs > 0 ? 'text-red-600' : 'text-slate-400'}`}>
+                                            {modData.openBugs}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

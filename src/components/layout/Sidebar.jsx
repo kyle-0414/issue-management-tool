@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Activity, LineChart, LayoutGrid, AlertTriangle, Settings, MessageSquare, Bell, Shield, ChevronDown } from 'lucide-react';
 
-const Sidebar = ({ onNavigate, currentView }) => {
+const Sidebar = ({ onNavigate, currentView, issues = [], onStartDemo }) => {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
 
   const menuItems = [
     { id: 'dashboard', label: '대시보드 홈', icon: Activity },
-    { id: 'issue-list', label: '이슈 리스트 현황', icon: LayoutGrid },
+    { id: 'issue-list', label: '이슈 리스트 현황', icon: LayoutGrid, count: issues.length },
   ];
 
   const adminItems = [
@@ -15,9 +16,24 @@ const Sidebar = ({ onNavigate, currentView }) => {
     { id: 'admin-notifications', label: 'Notifications', icon: Bell },
   ];
 
+  const handleTitleClick = () => {
+    const newCount = clickCount + 1;
+    if (newCount >= 3) {
+      setClickCount(0);
+      onStartDemo();
+    } else {
+      setClickCount(newCount);
+      // 2초 뒤에 안 누르면 초기화
+      setTimeout(() => setClickCount(0), 2000);
+    }
+  };
+
   return (
     <aside className="w-64 bg-slate-900 text-white hidden md:flex flex-col flex-shrink-0 transition-all duration-300">
-      <div className="p-6 border-b border-slate-700 flex items-center gap-3 cursor-pointer" onClick={() => onNavigate('dashboard')}>
+      <div 
+        className="p-6 border-b border-slate-700 flex items-center gap-3 cursor-pointer hover:bg-slate-800/50 transition-colors" 
+        onClick={handleTitleClick}
+      >
         <div className="w-8 h-8 bg-indigo-500 rounded flex items-center justify-center font-bold">QA</div>
         <span className="font-bold text-lg tracking-wide">Insight Pro</span>
       </div>
@@ -28,13 +44,22 @@ const Sidebar = ({ onNavigate, currentView }) => {
             <li key={item.id}>
               <button
                 onClick={() => onNavigate(item.id)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors ${currentView === item.id
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-md transition-colors ${currentView === item.id
                   ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/20'
                   : 'text-slate-300 hover:bg-slate-800 hover:text-white'
                   }`}
               >
-                <item.icon size={20} />
-                <span className="font-medium">{item.label}</span>
+                <div className="flex items-center gap-3">
+                  <item.icon size={20} />
+                  <span className="font-medium">{item.label}</span>
+                </div>
+                {item.count !== undefined && (
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                    currentView === item.id ? 'bg-white/20 text-white' : 'bg-slate-800 text-indigo-400'
+                  }`}>
+                    {item.count}
+                  </span>
+                )}
               </button>
             </li>
           ))}
@@ -77,7 +102,7 @@ const Sidebar = ({ onNavigate, currentView }) => {
           </div>
         </div>
 
-        {/* 스프린트 진행도 */}
+        {/* 스프린트 진행도 - 잠시 숨김 처리
         <div className="mt-12 px-6">
           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-4">Sprint Progress</p>
           <div className="bg-slate-800 rounded-lg p-3 border border-slate-700">
@@ -90,6 +115,7 @@ const Sidebar = ({ onNavigate, currentView }) => {
             </div>
           </div>
         </div>
+        */}
       </nav>
 
       <div className="p-4 border-t border-slate-700">

@@ -30,11 +30,11 @@ const PulseSection = ({ showInsights, comments, metrics }) => {
           value={metrics.unresolved}
           subValue={
             <div className="flex items-center gap-2 text-xs font-bold text-slate-500 mt-1 uppercase">
-              <span className="whitespace-nowrap">Open <span className="font-black text-slate-900 ml-0.5">8</span></span>
+              <span className="whitespace-nowrap">Open <span className="font-black text-slate-900 ml-0.5">{metrics.openCount}</span></span>
               <span className="text-slate-200">•</span>
-              <span className="whitespace-nowrap">In Progress <span className="font-black text-slate-900 ml-0.5">6</span></span>
+              <span className="whitespace-nowrap">In Progress <span className="font-black text-slate-900 ml-0.5">{metrics.inProgressCount}</span></span>
               <span className="text-slate-200">•</span>
-              <span className="whitespace-nowrap">Dev Done <span className="font-black text-slate-900 ml-0.5">10</span></span>
+              <span className="whitespace-nowrap">Dev Done <span className="font-black text-slate-900 ml-0.5">{metrics.devDoneCount}</span></span>
             </div>
           }
           icon={AlertCircle}
@@ -52,7 +52,7 @@ const PulseSection = ({ showInsights, comments, metrics }) => {
           icon={RefreshCcw}
           colorClass="bg-amber-50 text-amber-600"
           valueColor="text-orange-500"
-          insight={comments?.fixTime}
+          insight={comments?.reopenRate}
           showInsights={showInsights}
         />
 

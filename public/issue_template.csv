@@ -1,0 +1,8 @@
+id,summary,severity,status,project,reopen,module
+QA-501,신규 결제 모듈 타임아웃 오류,Critical,Open,FinTech App,Yes,Payment Gateway
+QA-502,메인 화면 로딩 속도 저하,Major,In Progress,FinTech App,No,User UI
+QA-503,로그인 버튼 정렬 오류,Minor,Resolved,FinTech App,No,User Auth
+QA-504,푸시 알림 미발송 현상,Major,Open,FinTech App,No,Notification
+QA-505,환경 설정 페이지 크래시,Critical,Open,FinTech App,No,User UI
+QA-506,다국어 번역 누락 (KO),Minor,Closed,FinTech App,No,Localization
+QA-507,네트워크 전환 시 연결 끊김,Major,Reopened,FinTech App,Yes,Network
