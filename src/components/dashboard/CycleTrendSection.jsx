@@ -54,21 +54,21 @@ const CycleTrendSection = ({ showInsights, comments }) => {
             </span>
             <span className="text-sm font-black text-slate-700">{failed}</span>
           </div>
-          <div className="flex flex-col items-center p-4 bg-slate-50/50 rounded-xl border border-slate-100 hover:border-rose-200 hover:bg-rose-50/30 transition-all group">
+          <div className="flex flex-col items-center p-4 bg-slate-50/50 rounded-xl border border-slate-100 hover:border-slate-400 hover:bg-slate-100/30 transition-all group">
             <span className="text-[10px] font-bold text-slate-400 uppercase mb-1 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Block
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-900"></span> Block
             </span>
             <span className="text-sm font-black text-slate-700">{blocked}</span>
           </div>
           <div className="flex flex-col items-center p-4 bg-slate-50/50 rounded-xl border border-slate-100 hover:border-slate-200 transition-all group">
             <span className="text-[10px] font-bold text-slate-400 uppercase mb-1 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Not Run
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span> Not Run
             </span>
             <span className="text-sm font-black text-slate-700">{notRun}</span>
           </div>
-          <div className="flex flex-col items-center p-4 bg-slate-50/50 rounded-xl border border-slate-100 hover:border-slate-200 transition-all group">
+          <div className="flex flex-col items-center p-4 bg-slate-50/50 rounded-xl border border-slate-100 hover:border-sky-200 hover:bg-sky-50 transition-all group">
             <span className="text-[10px] font-bold text-slate-400 uppercase mb-1 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span> NA
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span> NA
             </span>
             <span className="text-sm font-black text-slate-700">{na}</span>
           </div>

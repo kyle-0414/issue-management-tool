@@ -76,9 +76,11 @@ const TrendStatusSection = ({ showInsights, comments, issues }) => {
           <div className="absolute bottom-4 right-4 z-20 animate-fadeIn transition-all">
             <div className="bg-slate-900/95 text-white p-5 rounded-2xl shadow-2xl backdrop-blur w-[280px] md:w-[320px] border border-white/10">
               <p className="text-amber-400 font-black text-xs mb-2 flex items-center gap-2 border-b border-white/10 pb-2 uppercase tracking-widest">
-                <Search size={14} /> 핵심 Insight: 골든 크로스
+                <Search size={14} /> 핵심 Insight: 대응 처리 지연
               </p>
-              <p className="text-[11px] opacity-90 font-medium leading-relaxed mt-2">{comments?.goldenCross?.replace(/"/g, '')}</p>
+              <p className="text-[11px] opacity-90 font-medium leading-relaxed mt-2">
+                개발 수정 건 대비 QA 대응 처리가 늦어지고 있습니다. 수정 이슈에 대해 빠르게 대응하도록 하겠습니다.
+              </p>
             </div>
           </div>
         )}

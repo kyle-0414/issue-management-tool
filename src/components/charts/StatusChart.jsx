@@ -20,7 +20,7 @@ const StatusChart = ({ issues = [], testData }) => {
     datasets: [
       {
         data: [passed, failed, blocked, notRun, na],
-        backgroundColor: ['#10b981', '#ef4444', '#f43f5e', '#94a3b8', '#cbd5e1'], 
+        backgroundColor: ['#10b981', '#ef4444', '#1e293b', '#cbd5e1', '#38bdf8'], 
         borderWidth: 0,
         hoverOffset: 4
       },
