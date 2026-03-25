@@ -26,67 +26,97 @@ const QualityInsightsSection = ({ showInsights, comments, issues = [] }) => {
     .slice(0, 3);
 
     return (
-        <section id="section-quality-insights" className="mb-12 pb-8 border-b border-slate-100">
-            <div className="flex items-center gap-2 mb-8">
+        <section id="section-quality-insights" className="mb-10">
+            <div className="flex items-center gap-2 mb-4">
                 <h3 className="text-lg font-bold text-slate-700 uppercase tracking-wide">3. QUALITY INSIGHTS</h3>
-                <div className="h-px flex-1 bg-slate-100"></div>
+                <div className="h-px flex-1 bg-slate-200"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-10 gap-6">
-                {/* [CARD 1] Reopen / Side-effect (20%) */}
-                <div className="md:col-span-2 bg-white p-6 rounded-xl border border-slate-100 shadow-[0_2px_15px_rgb(0,0,0,0.02)] flex flex-col group transition-all duration-300">
-                    <div className="mb-6">
-                        <h4 className="text-lg font-bold text-slate-800 tracking-tight leading-none">Reopen / Side-effect</h4>
-                    </div>
-
-                    <div className="space-y-4 flex-1">
-                        <div className="flex justify-between items-center py-2 border-b border-slate-50">
-                            <span className="text-[14px] font-bold text-slate-800">Reopen</span>
-                            <span className="text-[16px] font-black text-slate-900">{reopenCount} <span className={`font-bold ml-1 text-[13px] ${reopenCount > 2 ? 'text-rose-500' : 'text-slate-400'}`}>({reopenCount > 0 ? `+${reopenCount}` : '0'})</span></span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 border-b border-slate-50">
-                            <span className="text-[14px] font-bold text-slate-800">Side-effect</span>
-                            <span className="text-[16px] font-black text-slate-900">{sideEffectCount} <span className="text-orange-500 font-bold ml-1 text-[13px]">{sideEffectCount > 0 ? `+${sideEffectCount}` : ''}</span></span>
-                        </div>
-                        <div className="pt-2">
-                            <span className="text-[12px] font-bold text-orange-500 uppercase tracking-tight">
-                                {reopenCount > 3 ? 'Action Needed: 회귀 테스트 강화 필요' : 'Status: Stable'}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* [CARD 2] Top Risk Modules (30%) */}
-                <div className="md:col-span-3 bg-white p-6 rounded-xl border border-slate-100 shadow-[0_2px_15px_rgb(0,0,0,0.02)] flex flex-col group transition-all duration-300">
-                    <div className="mb-8">
-                        <h4 className="text-lg font-bold text-slate-800 tracking-tight leading-none">Top Risk Modules</h4>
-                    </div>
-
-                    <div className="space-y-0 text-slate-900">
-                        {moduleRisks.map(([key, mod], idx) => (
-                            <div key={key} className={`py-5 ${idx !== 2 ? 'border-b border-slate-50' : ''}`}>
-                                <div className="flex items-baseline gap-2 mb-2 font-black">
-                                    <span className="text-xl text-slate-900">0{idx + 1}</span>
-                                    <span className="text-[14px] text-slate-800 tracking-tight">{mod.name}</span>
+            <div className="bg-slate-50/50 p-8 rounded-[2rem] border border-slate-100/30">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    {/* [CARD 1] Reopen / Side-effect */}
+                    <div className="md:col-span-3 bg-white p-7 rounded-[1.5rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-white flex flex-col justify-between group transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+                        <div>
+                            <h4 className="text-[13px] font-bold text-slate-700 uppercase tracking-wide mb-6">Reopen / Side-effect</h4>
+                            
+                            <div className="space-y-8">
+                                {/* Reopen Metric */}
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-[13px] font-bold text-slate-500">Reopen</span>
+                                    <div className="flex items-baseline gap-3">
+                                        <span className="text-3xl font-black text-slate-900">{reopenCount}</span>
+                                        <div className="flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100/50">
+                                            <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[6px] border-b-rose-600"></div>
+                                            <span>2</span>
+                                            <span className="text-slate-400 font-medium ml-0.5">prev.</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex flex-wrap gap-x-4 gap-y-1 ml-8">
-                                    {mod.critical > 0 && <span className="text-[11px] font-bold text-rose-600">Critical {mod.critical}</span>}
-                                    {mod.major > 0 && <span className="text-[11px] font-bold text-orange-500">Major {mod.major}</span>}
-                                    {mod.minor > 0 && <span className="text-[10px] font-bold text-blue-500">Minor {mod.minor}</span>}
-                                    {mod.total === 0 && <span className="text-[10px] font-bold text-slate-200">No Open Bugs</span>}
+
+                                {/* Side-effect Metric */}
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-[13px] font-bold text-slate-500">Side-effect</span>
+                                    <div className="flex items-baseline gap-3">
+                                        <span className="text-3xl font-black text-slate-900">{sideEffectCount}</span>
+                                        <div className="flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100/50">
+                                            <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[6px] border-t-emerald-600"></div>
+                                            <span>1</span>
+                                            <span className="text-slate-400 font-medium ml-0.5">prev.</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </div>
+                        </div>
 
-                {/* [CARD 3] Severity Distribution (50%) */}
-                <div className="md:col-span-5 bg-white p-6 rounded-xl border border-slate-100 shadow-[0_2px_15px_rgb(0,0,0,0.02)] flex flex-col group transition-all duration-300">
-                    <div className="mb-6">
-                        <h4 className="text-lg font-bold text-slate-800 tracking-tight leading-none">심각도 분포</h4>
+                        <div className="mt-8 pt-6 border-t border-slate-50">
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50/50 rounded-full border border-emerald-100">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                                <span className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">
+                                    {reopenCount > 3 ? 'Monitoring' : 'Under Control'}
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex-1 min-h-[220px]">
-                        <SeverityChart issues={issues} />
+
+                    {/* [CARD 2] Top Risk Modules */}
+                    <div className="md:col-span-4 bg-white p-7 rounded-[1.5rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-white flex flex-col group transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+                        <h4 className="text-[13px] font-bold text-slate-700 uppercase tracking-wide mb-6">Top Risk Modules</h4>
+
+                        <div className="flex-1 flex flex-col justify-center space-y-4">
+                            {moduleRisks.map(([key, mod], idx) => (
+                                <div key={key} className="relative group/item">
+                                    <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/50 border border-slate-100/50 transition-all group-hover/item:bg-white group-hover/item:shadow-sm group-hover/item:border-slate-200">
+                                        <div className="flex items-center gap-4">
+                                            <span className="text-[10px] font-black text-slate-300 tracking-widest uppercase truncate max-w-[20px]">0{idx + 1}</span>
+                                            <span className="text-[15px] font-bold text-slate-800 tracking-tight">{mod.name}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            {mod.critical > 0 ? (
+                                                <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 text-[10px] font-black border border-rose-100 uppercase tracking-tight">
+                                                    Critical · {mod.critical}
+                                                </span>
+                                            ) : mod.major > 0 ? (
+                                                <span className="px-2 py-0.5 rounded-md bg-orange-50 text-orange-600 text-[10px] font-black border border-orange-100 uppercase tracking-tight">
+                                                    Major · {mod.major}
+                                                </span>
+                                            ) : (
+                                                <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-600 text-[10px] font-black border border-blue-100 uppercase tracking-tight">
+                                                    Minor · {mod.minor || 1}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* [CARD 3] Severity Breakdown */}
+                    <div className="md:col-span-5 bg-white p-7 rounded-[1.5rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-white flex flex-col group transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+                        <h4 className="text-[13px] font-bold text-slate-700 uppercase tracking-wide mb-6">Severity Breakdown</h4>
+                        <div className="flex-1 min-h-[180px] w-full mt-2">
+                            <SeverityChart issues={issues} />
+                        </div>
                     </div>
                 </div>
             </div>
